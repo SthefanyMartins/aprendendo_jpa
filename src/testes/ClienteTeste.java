@@ -1,8 +1,10 @@
 package testes;
 
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import model.Cliente;
 
 public class ClienteTeste {
@@ -11,29 +13,24 @@ public class ClienteTeste {
     private static EntityManager entityManager = entityManagerFactory.createEntityManager();
     
     public static void main(String[] args) {
-        //find
-        Cliente cliente = entityManager.find(Cliente.class, 1);
-                
-        //Insert
-        Cliente cliente1 = new Cliente();
-        cliente1.setNome("GOOGLE");
-        entityManager.getTransaction().begin();
-        entityManager.persist(cliente1);
-        entityManager.getTransaction().commit();
+        //Select
+        String jpql = "select c from Cliente c";
+        TypedQuery<Cliente> tipedQuery = entityManager.createQuery(jpql, Cliente.class);
+        List<Cliente> listaCliente = tipedQuery.getResultList();
         
-        //delete
-        Cliente cliente2 = entityManager.find(Cliente.class, 2);
-        entityManager.getTransaction().begin();
-        entityManager.remove(cliente2);
-        entityManager.getTransaction().commit();
+        for(Cliente cliente: listaCliente){
+            System.out.println(cliente.getNome());
+        }
         
-        //update
-        Cliente cliente3 = new Cliente();
-        cliente3.setId(1);
-        cliente3.setNome("GOOGLE");
-        entityManager.getTransaction().begin();
-        entityManager.merge(cliente3);
-        entityManager.getTransaction().commit();
+        //select com where
+        String jpql1 = "select c from Cliente c where id = :idCliente";
+        Integer idCliente = 5;
+        TypedQuery<Cliente> tipedQuery1 = entityManager.createQuery(jpql1, Cliente.class).setParameter("idCliente", idCliente);
+        List<Cliente> listaCliente1 = tipedQuery1.getResultList();
+        
+        for(Cliente cliente: listaCliente1){
+            System.out.println(cliente.getNome());
+        }
         
         entityManager.close();
         entityManagerFactory.close();
