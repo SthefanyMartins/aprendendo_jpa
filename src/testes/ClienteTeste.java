@@ -31,6 +31,22 @@ public class ClienteTeste {
         for(Cliente cliente: listaCliente1){
             System.out.println(cliente.getNome());
         }
+
+        //Delete
+        entityManager.getTransaction().begin();
+        Integer idCliente2 =  5;
+        entityManager.createQuery("delete from Cliente c where id = :idCliente").setParameter("idCliente", idCliente2)
+                .executeUpdate();
+        entityManager.getTransaction().commit();
+
+        //update
+        entityManager.getTransaction().begin();
+        Integer idCliente3 = 3;
+        entityManager.createQuery("update Cliente c set nome='Facebook APP' where c.id = :idCliente")
+                .setParameter("idCliente", idCliente3).executeUpdate();
+        entityManager.getTransaction().commit();
+        
+        
         
         entityManager.close();
         entityManagerFactory.close();
